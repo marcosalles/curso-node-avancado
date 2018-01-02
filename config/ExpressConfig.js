@@ -5,6 +5,9 @@ const ExpressConfig = (function () {
 
 	module.app = require('express')();
 
+	const bodyParser = require('body-parser');
+	module.app.use(bodyParser.json());
+
 	const consign = require('consign')();
 	consign
 		.include('app/controllers')
