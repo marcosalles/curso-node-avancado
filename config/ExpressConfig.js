@@ -1,13 +1,17 @@
-const ExpressConfig = function () {
-	const app = require('express')();
-	const consign = require('consign');
+const ExpressConfig = (function () {
+	const module = {
+		app: undefined
+	};
 
-	consign()
+	module.app = require('express')();
+
+	const consign = require('consign')();
+	consign
 		.include('app/controllers')
-		.into(app);
+		.into(module.app);
 
-	return app;
-};
+	return module;
+});
 
 module.exports = function () {
 	return new ExpressConfig();

@@ -1,4 +1,5 @@
-const Payment Controller = function (app) {
+const PaymentController = function (app) {
+
 	app.get('/payments', function (req, res) {
 		res.send('200 OK');
 	});
