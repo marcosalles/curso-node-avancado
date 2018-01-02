@@ -1,7 +1,10 @@
 const ExpressConfig = function () {
-	const express = require('express');
+	const app = require('express')();
+	const consign = require('consign');
 
-	const app = express();
+	consign()
+		.include('app/controllers')
+		.into(app);
 
 	return app;
 };
