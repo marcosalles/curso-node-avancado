@@ -1,0 +1,26 @@
+{
+  "name": "nodejs-avancado",
+  "version": "1.0.0",
+  "description": "lorem ipsum",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcosalles/curso-node-avancado.git"
+  },
+  "keywords": [
+    "node",
+    "curso",
+    "alura",
+    "nodejs",
+    "express"
+  ],
+  "author": "Marco Salles",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcosalles/curso-node-avancado/issues"
+  },
+  "homepage": "https://github.com/marcosalles/curso-node-avancado#readme"
+}
