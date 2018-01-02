@@ -1,8 +1,8 @@
 {
   "name": "nodejs-avancado",
   "version": "1.0.0",
-  "description": "lorem ipsum",
-  "main": "main.js",
+  "description": "Lorem ipsum dolor sit amet",
+  "main": "Main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/marcosalles/curso-node-avancado/issues"
   },
-  "homepage": "https://github.com/marcosalles/curso-node-avancado#readme"
+  "homepage": "https://github.com/marcosalles/curso-node-avancado#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
 }
