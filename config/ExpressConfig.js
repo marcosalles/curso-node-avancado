@@ -5,14 +5,15 @@ const ExpressConfig = (function () {
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended:true}));
 
-	const validator = require('express-validator')();
-	app.use(validator);
+	const validator = require('express-validator');
+	app.use(validator());
 
 	const consign = require('consign')({
 		cwd: 'app'
 	});
 	consign
-		.include('daos/Database.js')
+		.include('errors')
+		.then('daos/Database.js')
 		.then('daos')
 		.then('controllers')
 		.into(app);
