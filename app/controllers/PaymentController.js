@@ -4,14 +4,21 @@ const PaymentController = (function (app) {
 		create: '/payments/create'
 	};
 
-	app.get(routes.list, function (req, res) {
-		res.send(routes.list + ' 200 OK');
+	const paymentDao = app.daos.PaymentDao;
+
+	app.get(routes.list, function (request, result, next) {
+		paymentDao.all(function (error, payments) {
+			result.send(routes.list + ' ' + payments);
+		});
 	});
 
-	app.post(routes.create, function (req, res) {
-		let payment = req.body;
-		console.log('payment', payment);
-		res.send(routes.create + ' 200 OK');
+	app.post(routes.create, function (request, result, next) {
+		const payment = request.body;
+		payment.status = 'ON_HOLD';
+		paymentDao.save(payment, function (error) {
+			if (error) console.log('error', error);
+			result.send(payment);
+		});
 	});
 
 	return routes;
