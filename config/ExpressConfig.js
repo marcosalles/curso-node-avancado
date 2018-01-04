@@ -1,19 +1,25 @@
 const ExpressConfig = (function () {
-	const module = {
-		app: undefined
-	};
-
-	module.app = require('express')();
+	const app = require('express')();
 
 	const bodyParser = require('body-parser');
-	module.app.use(bodyParser.json());
+	app.use(bodyParser.json());
+	app.use(bodyParser.urlencoded({extended:true}));
 
-	const consign = require('consign')();
+	const validator = require('express-validator')();
+	app.use(validator);
+
+	const consign = require('consign')({
+		cwd: 'app'
+	});
 	consign
-		.include('app/controllers')
-		.into(module.app);
+		.include('daos/Database.js')
+		.then('daos')
+		.then('controllers')
+		.into(app);
 
-	return module;
+	return {
+		app: app
+	};
 });
 
 module.exports = function () {
