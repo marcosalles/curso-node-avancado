@@ -1,8 +1,5 @@
 const PaymentController = (function (app) {
-	const routes = {
-		list: '/payments',
-		create: '/payments/create'
-	};
+	const routes = app.routes.PaymentRoutes;
 
 	const paymentDao = app.daos.PaymentDao;
 	const ErrorMap = app.errors.ErrorMap;
@@ -20,15 +17,27 @@ const PaymentController = (function (app) {
 	}
 
 	(function setupRoutes() {
-		app.get(
-			routes.list,
+		app[routes.list.method](
+			routes.list.path,
 			(request, result, next) => {
-			paymentDao.all(function (error, payments) {
-				result.send(routes.list + ' ' + payments);
+				paymentDao.all(function (error, payments) {
+					result.json(payments);
+				});
 			});
-		});
 
-		app.post(routes.create, (request, result, next) => {
+		app[routes.show.method](
+			routes.show.path,
+			(request, result, next) => {
+				const paymentId = request.params.id;
+				paymentDao.load(paymentId, function (error, payments) {
+					const payment = payments[0];
+					result.json(payment);
+				});
+			});
+
+		app[routes.save.method](
+			routes.save.path,
+			(request, result, next) => {
 			const errors = validate(request);
 			if (errors.length > 0) {
 				return result.status(422).json(new ErrorMap(errors));
@@ -36,12 +45,20 @@ const PaymentController = (function (app) {
 			const payment = request.body;
 			payment.status = 'ON_HOLD';
 			paymentDao.save(payment, function (error, saved) {
-				if (error) console.log('error', error);
+				if (error) {
+					return result.status(500).json(new ErrorMap(error));
+				}
 				payment.id = saved.insertId;
-				result.send(payment);
+				result.location(routes.show.build(payment.id));
+				result.status(201).json(payment);
 			});
 		});
 
+		app[routes.update.method](
+			routes.update.path,
+			(request, result, next) => {
+
+		});
 	})();
 	return routes;
 });
