@@ -20,29 +20,8 @@ const Database = (function (database, info) {
 	return module;
 });
 
-module.exports = function() {
-	const env = process.env.NODE_ENV || 'development';
-	console.info('Using environment', env.toUpperCase());
-
-	let databaseInfo = {};
-	if (env == 'production') {
-		const dbUrl = process.env.CLEARDB_DATABASE_URL;
-		let infoBreakdown = dbUrl.match(/mysql:\/\/([\w-]+):([\w-]+)@([\w.-]+)\/([\w-]+)/);
-
-		databaseInfo = {
-			user: infoBreakdown[1],
-			password: infoBreakdown[2],
-			host:  infoBreakdown[3],
-			database: infoBreakdown[4]
-		};
-	} else {
-		databaseInfo = {
-			user: 'root',
-			password: '',
-			host: '0.0.0.0',
-			database: ['nodeadvanced', '_', env].join('')
-		}
-	}
-	console.info('Using database information:', databaseInfo);
-	return new Database(require('mysql'), databaseInfo);
+module.exports = function(app) {
+	const info = app.config.DatabaseInfo;
+	console.info('Using database information:', info);
+	return new Database(require('mysql'), info);
 };

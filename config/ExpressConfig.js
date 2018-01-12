@@ -12,7 +12,9 @@ const ExpressConfig = (function () {
 		cwd: 'app'
 	});
 	consign
-		.include('errors')
+		.include('config')
+		.then('errors')
+		.then('routes')
 		.then('daos/Database.js')
 		.then('daos')
 		.then('controllers')
