@@ -1,25 +1,40 @@
 const ErrorMap = (function (errors) {
 	var errorType = null;
-	if (errors.sql !== undefined) {
+	if (errors.sql != null) {
 		errorType = 'Sql';
 	}
-	if (errors.length > 0 && errors[0].location !== undefined) {
+	if (errors.length > 0 && errors[0].location != null ) {
 		errorType = 'Validation';
+	}
+	if (errors.customMessage != null) {
+		errorType = 'Custom';
 	}
 
 	var errorMapFor = this['for' + errorType];
-	if (errorMapFor === 'function') {
+	if (typeof errorMapFor === 'function') {
 		return errorMapFor(errors);
 	}
 	return {
 		errors: [
 			{
 				message: 'Invalid errors',
-				content: errors.toString()
+				content: JSON.stringify(errors)
 			}
 		]
 	};
 });
+
+ErrorMap.prototype.forCustom = function (error) {
+	return {
+		errors: [
+			{
+				message: error.customMessage,
+				content: error.content
+			}
+		]
+	}
+};
+
 ErrorMap.prototype.forSql = function (error) {
 	return {
 		errors: [
@@ -30,6 +45,7 @@ ErrorMap.prototype.forSql = function (error) {
 		]
 	};
 };
+
 ErrorMap.prototype.forValidation = function (errors) {
 	const mappedErrors = [];
 	errors.forEach((error) => {
@@ -40,6 +56,7 @@ ErrorMap.prototype.forValidation = function (errors) {
 	});
 	return {errors:mappedErrors};
 };
+
 module.exports = function () {
 	return ErrorMap;
 };
