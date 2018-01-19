@@ -4,12 +4,13 @@ const PaymentDao = (function (baseDao) {
 	}
 
 	function load(id, callback) {
-		baseDao.query('select * from payment where id = ?', [id], callback);
+		baseDao.findOne('select * from payment where id = ?', [id], callback);
 	}
 
 	function save(payment, callback) {
 		if (payment.id) {
-			baseDao.query('update payment set ?', payment, callback);
+			const id = payment.id;
+			baseDao.query('update payment set ? where id = ?', [payment, id], callback);
 		} else {
 			baseDao.query('insert into payment set ?', payment, callback);
 		}
@@ -19,11 +20,16 @@ const PaymentDao = (function (baseDao) {
 		baseDao.query('delete from payment where id = ?', [id], callback);
 	}
 
+	function exists(id, callback) {
+		baseDao.findOne('select id from payment where id = ?', [id], callback);
+	}
+
 	return {
 		all: all,
 		load: load,
 		save: save,
-		remove: remove
+		remove: remove,
+		exists: exists
 	};
 });
 

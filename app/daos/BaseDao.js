@@ -12,6 +12,12 @@ const BaseDao = (function (database) {
 		database.query(query, params, callback);
 	};
 
+	module.findOne = function (query, params, callback) {
+		database.query(query, params, function(error, results) {
+			callback(error, results[0]);
+		});
+	};
+
 	return module;
 });
 
