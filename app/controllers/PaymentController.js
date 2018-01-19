@@ -1,22 +1,11 @@
 const PaymentStatus = require('../models/PaymentStatus');
+const PaymentValidator = require('../validators/PaymentValidator');
 
 const PaymentController = (function (app) {
 	const routes = app.routes.PaymentRoutes;
 
 	const paymentDao = app.daos.PaymentDao;
 	const ErrorMap = app.errors.ErrorMap;
-
-	function validate(payment) {
-		payment.check('customerEmail', 'Customer email can\'t be empty').notEmpty();
-		payment.check('customerEmail', 'Customer email should be a valid email').isEmail();
-
-		payment.check('customerName', 'Customer name can\'t be empty').notEmpty();
-
-		payment.check('value', 'Payment must have a value').notEmpty();
-		payment.check('value', 'Payment must be a decimal number').isDecimal();
-
-		return payment.validationErrors();
-	}
 
 	(function setupRoutes() {
 		app[routes.list.method](
@@ -39,9 +28,10 @@ const PaymentController = (function (app) {
 		app[routes.save.method](
 			routes.save.path,
 			(request, result, next) => {
-			const errors = validate(request);
-			if (errors.length > 0) {
-				return result.status(422).json(new ErrorMap(errors));
+				const validator = new PaymentValidator(request);
+				validator.validate();
+			if (validator.hasErrors()) {
+				return result.status(422).json(new ErrorMap(validator.getErrors()));
 			}
 			const payment = request.body;
 			if (payment.id) {
@@ -65,13 +55,14 @@ const PaymentController = (function (app) {
 		app[routes.update.method](
 			routes.update.path,
 			(request, result, next) => {
-				const errors = validate(request);
-				if (errors.length > 0) {
-					return result.status(422).json(new ErrorMap(errors));
+				const validator = new PaymentValidator(request);
+				validator.validatePartial();
+				if (validator.hasErrors()) {
+					return result.status(422).json(new ErrorMap(validator.getErrors()));
 				}
 				const paymentId = request.params.id;
-				paymentDao.exists(paymentId, function(error, payments) {
-					if (payments.length == 0) {
+				paymentDao.exists(paymentId, function(error, existingPayment) {
+					if (!existingPayment) {
 						return result.status(405).json(new ErrorMap({
 							customMessage: 'Payment does not exist, to create use ' + routes.save.method.toUpperCase() + ': ' + routes.save.path,
 							content: routes.save.method.toUpperCase() + ':' + routes.save.build(paymentId)
