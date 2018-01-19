@@ -10,11 +10,15 @@ const PaymentRoutes = (function() {
 		},
 		save: {
 			method: 'post',
-			path: '/payments/save'
+			path: '/payments'
 		},
 		update: {
 			method: 'put',
-			path: '/payments/update/:id'
+			path: '/payments/:id'
+		},
+		remove: {
+			method: 'delete',
+			path: '/payments/:id'
 		}
 	};
 
@@ -23,6 +27,9 @@ const PaymentRoutes = (function() {
 	};
 	routes.update.build = function(id) {
 		return routes.update.path.replace(/:id/, id);
+	};
+	routes.remove.build = function(id) {
+		return routes.remove.path.replace(/:id/, id);
 	};
 
 	return routes;
