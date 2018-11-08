@@ -33,7 +33,8 @@ const PaymentController = (function (app) {
 			if (validator.hasErrors()) {
 				return result.status(422).json(new ErrorMap(validator.getErrors()));
 			}
-			const payment = request.body;
+			const payment = request.body.payment;
+			const card = request.body.card;
 			if (payment.id) {
 				return result.status(405).json(new ErrorMap({
 					customMessage: 'Payment already exists, to update use ' + routes.update.method.toUpperCase() + ': ' + routes.update.build(payment.id),

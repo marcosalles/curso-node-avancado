@@ -19,15 +19,15 @@ PaymentValidator.prototype.validatePartial = function () {
 	}
 };
 PaymentValidator.prototype.validateName = function() {
-	this.payment.check('customerName', 'Customer name can\'t be empty').notEmpty();
+	this.payment.check('payment.customerName', 'Customer name can\'t be empty').notEmpty();
 };
 PaymentValidator.prototype.validateEmail = function() {
-	this.payment.check('customerEmail', 'Customer email can\'t be empty').notEmpty();
-	this.payment.check('customerEmail', 'Customer email should be a valid email').isEmail();
+	this.payment.check('payment.customerEmail', 'Customer email can\'t be empty').notEmpty();
+	this.payment.check('payment.customerEmail', 'Customer email should be a valid email').isEmail();
 };
 PaymentValidator.prototype.validateValue = function() {
-	this.payment.check('value', 'Payment must have a value').notEmpty();
-	this.payment.check('value', 'Payment must be a decimal number').isDecimal();
+	this.payment.check('payment.value', 'Payment must have a value').notEmpty();
+	this.payment.check('payment.value', 'Payment must be a decimal number').isDecimal();
 };
 PaymentValidator.prototype.hasErrors = function () {
 	return this.payment.validationErrors().length > 0;
